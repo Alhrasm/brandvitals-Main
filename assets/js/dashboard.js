@@ -1976,19 +1976,23 @@
     });
     P.append(card("phone", t("contact"), rows));
     // Logos and favicon
-    const logoRow = (src, label) => {
+    // srcs: one path, or several files that are swapped together (all favicon sizes).
+    const logoRow = (srcs, label, preview) => {
+      const list = [].concat(srcs);
+      const shown = preview || list[0];
       const thumb = h("img", { class: "thumb__img", alt: "" });
-      thumb.src = assetUrl(src);
+      thumb.src = assetUrl(shown);
       return h("div", { class: "fld" }, h("span", { class: "fld__label" }, label),
-        h("div", { class: "thumb thumb--logo" }, h("div", { class: "thumb__box" + (/light/.test(src) ? " is-dark" : " is-light") }, thumb),
-          h("div", { class: "thumb__side" }, h("code", { class: "fld__hint" }, src), uploadBtn(async f => { const u = await addUpload(f); if (u) { const n = replaceAsset(src, u.path, u); toast(t("replaced", { n }), { kind: "ok", undo: true }); } }, "image/*", t("replaceImg")))));
+        h("div", { class: "thumb thumb--logo" }, h("div", { class: "thumb__box" + (/light/.test(shown) ? " is-dark" : " is-light") }, thumb),
+          h("div", { class: "thumb__side" }, h("code", { class: "fld__hint" }, list.join(" · ")), uploadBtn(async f => { const u = await addUpload(f); if (u) { const n = replaceAsset(list, u.path, u); toast(t("replaced", { n }), { kind: "ok", undo: true }); } }, "image/*", t("replaceImg")))));
     };
     const idx = S.docs["index.html"];
     const srcOf = (sel, def) => { const x = idx.querySelector(sel); return x ? x.getAttribute("src") : def; };
     const lightSrc = srcOf("img.logo-light", "assets/img/logo-light.svg");
     const darkSrc = srcOf("img.logo-dark", "assets/img/logo.svg");
-    const fav = idx.querySelector('link[rel~="icon"]');
-    P.append(card("images", t("logos"), [logoRow(lightSrc, t("logoLight")), logoRow(darkSrc, t("logoDark")), fav ? logoRow(fav.getAttribute("href"), t("seoFavicon")) : null]));
+    const icons = [...new Set([...idx.querySelectorAll('link[rel~="icon"][href], link[rel="apple-touch-icon"][href]')].map(l => l.getAttribute("href")))];
+    const iconPreview = icons.find(s => /\.svg$/i.test(s)) || icons[0];
+    P.append(card("images", t("logos"), [logoRow(lightSrc, t("logoLight")), logoRow(darkSrc, t("logoDark")), icons.length ? logoRow(icons, t("seoFavicon"), iconPreview) : null]));
     // Find and replace
     const fi = h("input", { class: "inp", placeholder: t("findPh"), dir: "auto" });
     const ri = h("input", { class: "inp", placeholder: t("replacePh"), dir: "auto" });
@@ -2035,14 +2039,20 @@
     for (const path of Object.keys(S.uploads)) if (!map.has(path)) map.set(path, { src: path, uses: 0, pages: new Set(), alt: "" });
     return [...map.values()];
   }
+  // oldSrc may be one path or a list (e.g. every favicon file) replaced by the same new file.
   function replaceAsset(oldSrc, newSrc, dims) {
+    const olds = [].concat(oldSrc);
+    const mime = { png: "image/png", svg: "image/svg+xml", ico: "image/x-icon", webp: "image/webp", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif" }[(newSrc.split(".").pop() || "").toLowerCase()];
     snapshot(htmlPaths(), "asset");
     let n = 0;
     for (const p of htmlPaths()) {
       S.docs[p].querySelectorAll("img[src], link[href], meta[content]").forEach(el => {
         for (const a of ["src", "href", "content"]) {
-          if (el.getAttribute(a) !== oldSrc) continue;
+          if (!olds.includes(el.getAttribute(a))) continue;
           el.setAttribute(a, newSrc); n++;
+          // An icon link keeps a matching type, and a fixed size hint no longer applies.
+          if (el.tagName === "LINK" && el.hasAttribute("type") && mime) el.setAttribute("type", mime);
+          if (el.tagName === "LINK") el.removeAttribute("sizes");
           if (a === "src") {
             el.removeAttribute("srcset");
             if (dims && dims.w && dims.h) {
