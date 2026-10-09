@@ -959,6 +959,27 @@ p { text-wrap: pretty; }
 .modal__close svg { width: 16px; height: 16px; }
 body.modal-open { overflow: hidden; }
 
+/* Form submission notification: the modal shell, centred, with a pulse that turns into a check */
+.modal--notice { width: min(440px, 100%); display: grid; justify-items: center; gap: 0.85rem; text-align: center; }
+.notice__mark {
+  position: relative; width: 78px; height: 78px; margin-bottom: 0.3rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.notice__mark::after { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); opacity: 0; }
+.modal-backdrop.is-open .notice__mark::after { animation: noticeRing 1.4s var(--ease-out) 0.55s both; }
+.notice__mark svg { width: 46px; height: 32px; overflow: visible; }
+.notice__mark path { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100; stroke-dashoffset: 100; }
+.modal-backdrop.is-open .notice__mark path { animation: noticeDraw 0.9s var(--ease-out) 0.15s forwards; }
+.modal--notice h3 { font-size: 1.55rem; }
+.notice__text { max-width: 36ch; color: var(--text-2); }
+.notice__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; width: 100%; margin-top: 0.7rem; }
+.notice__actions .btn { flex: 1 1 170px; justify-content: center; }
+.notice--error .notice__mark { background: color-mix(in srgb, var(--danger) 12%, transparent); border-color: color-mix(in srgb, var(--danger) 35%, transparent); }
+.notice--error .notice__mark::after { border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
+.notice--error .notice__mark path { stroke: var(--danger); }
+@keyframes noticeDraw { to { stroke-dashoffset: 0; } }
+@keyframes noticeRing { from { transform: scale(1); opacity: 0.9; } to { transform: scale(1.5); opacity: 0; } }
+
 /* --------------------------------------------------------------------------
    14. MAP (contact)
    -------------------------------------------------------------------------- */

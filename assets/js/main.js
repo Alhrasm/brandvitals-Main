@@ -81,7 +81,6 @@
       if (quick) loader.classList.add("loader--quick");
       const dur = (quick ? 700 : 1600) + 150;
       const pct = loader.querySelector(".loader__pct b");
-      const bpm = loader.querySelector(".loader__bpm b");
       let loaded = document.readyState === "complete";
       let finished = false;
       window.addEventListener("load", () => { loaded = true; }, { once: true });
@@ -102,7 +101,6 @@
         const p = Math.min(1, (now - t0) / dur);
         const e = 1 - Math.pow(1 - p, 3);
         if (pct) pct.textContent = Math.round(e * (loaded ? 100 : 94));
-        if (bpm) bpm.textContent = Math.round(72 + e * 56);
         if (p >= 1 && loaded) { finish(); return; }
         requestAnimationFrame(tick);
       };
@@ -381,25 +379,25 @@
           if (!valid) return;
           const btn = form.querySelector('button[type="submit"]');
           const data = Forms.collect(form);
-          const done = () => {
+          // The visitor stays on the page: the result always appears as a popup notification.
+          const succeed = () => {
             if (btn) btn.classList.remove("is-loading");
-            form.style.display = "none";
-            const ok = document.querySelector(form.dataset.success || ".form-success");
-            if (ok) { ok.classList.add("is-visible"); ok.scrollIntoView({ behavior: "smooth", block: "center" }); }
+            if (form.closest("#consultModal")) ConsultModal.close();
+            form.reset();
+            Forms.successNotice(form);
           };
-          Forms.setError(form, "");
           // Bots fill the hidden honeypot field; the dashboard preview never sends anything.
-          if (data.website || window.__BV_PREVIEW) { done(); return; }
+          if (data.website || window.__BV_PREVIEW) { succeed(); return; }
           if (!Track.configured()) {
-            // No database connected yet: hand the request to WhatsApp so it is never lost.
-            if (Forms.toWhatsApp(data)) done();
-            else Forms.setError(form, "wa");
+            // No database connected yet: offer to send the request on WhatsApp, from the popup.
+            if (form.closest("#consultModal")) ConsultModal.close();
+            Forms.whatsappNotice(form, data);
             return;
           }
           if (btn) btn.classList.add("is-loading");
-          Track.lead(data).then(done).catch(() => {
+          Track.lead(data).then(succeed).catch(() => {
             if (btn) btn.classList.remove("is-loading");
-            Forms.setError(form, "net");
+            Forms.errorNotice(data);
           });
         });
         form.querySelectorAll("input, select, textarea").forEach(input => {
@@ -442,7 +440,7 @@
       const m = a && a.getAttribute("href").match(/wa\.me\/(\d+)/);
       return m ? m[1] : "201090861397";
     },
-    toWhatsApp(d) {
+    waLink(d) {
       const ar = I18n.lang === "ar";
       const rows = [
         d.form === "events" ? (ar ? "طلب فعالية جديد من الموقع" : "New event inquiry from the website") : (ar ? "طلب جديد من الموقع" : "New inquiry from the website"),
@@ -454,30 +452,112 @@
         d.budget && (ar ? "الميزانية: " : "Budget: ") + d.budget,
         d.message && (ar ? "الرسالة: " : "Message: ") + d.message
       ].filter(Boolean);
-      const w = window.open("https://wa.me/" + Forms.waNumber() + "?text=" + encodeURIComponent(rows.join("\n")), "_blank");
-      if (!w) return false;
-      try { w.opener = null; } catch (e) { /* ignore */ }
-      return true;
+      return "https://wa.me/" + Forms.waNumber() + "?text=" + encodeURIComponent(rows.join("\n"));
     },
-    setError(form, kind) {
-      let el = form.querySelector(".form-error");
-      if (!kind) { if (el) el.remove(); return; }
-      if (!el) {
-        el = document.createElement("p");
-        el.className = "form-error";
-        el.setAttribute("role", "alert");
-        const btn = form.querySelector('button[type="submit"]');
-        (btn ? btn.parentNode : form).appendChild(el);
-      }
+    // Reads the current-language text of an element from the page (so the dashboard can edit it).
+    textOf(el) {
+      if (!el) return "";
+      const v = el.getAttribute("data-" + I18n.lang);
+      return (v != null ? v : el.textContent).trim();
+    },
+    successNotice(form) {
       const ar = I18n.lang === "ar";
-      el.textContent = kind === "wa"
-        ? (ar ? "افتح واتساب للمتابعة، أو راسلنا مباشرة: " : "Please allow the WhatsApp window, or message us directly: ")
-        : (ar ? "تعذّر الإرسال الآن. راسلنا على واتساب: " : "We couldn't send that right now. Message us on WhatsApp: ");
-      const a = document.createElement("a");
-      a.href = "https://wa.me/" + Forms.waNumber();
-      a.target = "_blank"; a.rel = "noopener";
-      a.textContent = "WhatsApp";
-      el.appendChild(a);
+      const ok = form.dataset.success ? document.querySelector(form.dataset.success) : null;
+      Notice.show({
+        kind: "ok",
+        title: Forms.textOf(ok && ok.querySelector("h3")) || (ar ? "استلمنا طلبك." : "Request received."),
+        text: Forms.textOf(ok && ok.querySelector("p")) || (ar ? "سنتواصل معك خلال يوم عمل واحد." : "We'll reach out within one business day."),
+        actions: [
+          { label: ar ? "حسنًا" : "Done", primary: true },
+          { label: ar ? "تحدّث معنا على واتساب" : "Chat on WhatsApp", href: "https://wa.me/" + Forms.waNumber() }
+        ]
+      });
+    },
+    whatsappNotice(form, d) {
+      const ar = I18n.lang === "ar";
+      Notice.show({
+        kind: "wa",
+        title: ar ? "خطوة أخيرة" : "One last step",
+        text: ar ? "طلبك جاهز. أرسله عبر واتساب وسيرد عليك فريقنا مباشرة." : "Your request is ready. Send it on WhatsApp and our team will reply right away.",
+        actions: [
+          { label: ar ? "أرسل عبر واتساب" : "Send on WhatsApp", primary: true, href: Forms.waLink(d), onClick: () => setTimeout(() => { form.reset(); Forms.successNotice(form); }, 500) },
+          { label: ar ? "إلغاء" : "Cancel" }
+        ]
+      });
+    },
+    errorNotice(d) {
+      const ar = I18n.lang === "ar";
+      Notice.show({
+        kind: "err",
+        title: ar ? "تعذّر الإرسال الآن" : "We couldn't send that",
+        text: ar ? "حاول مرة أخرى بعد قليل، أو أرسل طلبك عبر واتساب." : "Please try again in a moment, or send your request on WhatsApp.",
+        actions: [
+          { label: ar ? "أرسل عبر واتساب" : "Send on WhatsApp", primary: true, href: Forms.waLink(d) },
+          { label: ar ? "حاول مرة أخرى" : "Try again" }
+        ]
+      });
+    }
+  };
+
+  /* ------------------------------------------------------------------
+     NOTICE — popup notification shown after a form is sent
+  ------------------------------------------------------------------ */
+  const Notice = {
+    el: null,
+    last: null,
+    icons: {
+      ok: '<svg viewBox="0 0 46 32"><path pathLength="100" d="M1 18h7l3-6 4 12 3-6h4l5 5L43 7"/></svg>',
+      wa: '<svg viewBox="0 0 46 32"><path pathLength="100" d="M34 15.5a11 11 0 0 1-16.8 9.4L11 27l1.9-6A11 11 0 1 1 34 15.5z"/></svg>',
+      err: '<svg viewBox="0 0 46 32"><path pathLength="100" d="M23 6v13M23 25.5v.5"/></svg>'
+    },
+    build() {
+      if (this.el) return this.el;
+      const el = document.createElement("div");
+      el.className = "modal-backdrop";
+      el.id = "bvNotice";
+      el.setAttribute("role", "dialog");
+      el.setAttribute("aria-modal", "true");
+      el.setAttribute("aria-labelledby", "bvNoticeTitle");
+      el.innerHTML = '<div class="modal modal--notice" role="document">' +
+        '<button class="modal__close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+        '<div class="notice__mark" aria-hidden="true"></div><h3 id="bvNoticeTitle"></h3><p class="notice__text" role="status"></p><div class="notice__actions"></div></div>';
+      document.body.appendChild(el);
+      el.querySelector(".modal__close").addEventListener("click", () => this.close());
+      el.addEventListener("click", e => { if (e.target === el) this.close(); });
+      document.addEventListener("keydown", e => { if (e.key === "Escape" && el.classList.contains("is-open")) this.close(); });
+      this.el = el;
+      return el;
+    },
+    show({ kind = "ok", title, text, actions = [] }) {
+      const el = this.build();
+      if (!el.classList.contains("is-open")) this.last = document.activeElement;
+      el.classList.remove("is-open");
+      el.classList.toggle("notice--error", kind === "err");
+      el.querySelector(".notice__mark").innerHTML = this.icons[kind] || this.icons.ok;
+      el.querySelector("h3").textContent = title;
+      el.querySelector(".notice__text").textContent = text;
+      const box = el.querySelector(".notice__actions");
+      box.replaceChildren();
+      actions.forEach(a => {
+        const b = document.createElement(a.href ? "a" : "button");
+        b.className = "btn " + (a.primary ? "btn--primary" : "btn--ghost");
+        if (a.href) { b.href = a.href; b.target = "_blank"; b.rel = "noopener"; } else b.type = "button";
+        const s = document.createElement("span");
+        s.textContent = a.label;
+        b.appendChild(s);
+        b.addEventListener("click", () => { if (a.onClick) a.onClick(); else if (!a.href) this.close(); });
+        box.appendChild(b);
+      });
+      void el.offsetWidth; // restart the icon animation
+      el.classList.add("is-open");
+      document.body.classList.add("modal-open");
+      setTimeout(() => { const f = box.querySelector(".btn--primary") || box.querySelector(".btn"); if (f) f.focus({ preventScroll: true }); }, 350);
+    },
+    close() {
+      if (!this.el || !this.el.classList.contains("is-open")) return;
+      this.el.classList.remove("is-open");
+      if (!document.querySelector(".modal-backdrop.is-open")) document.body.classList.remove("modal-open");
+      if (this.last && this.last.focus) { try { this.last.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }
     }
   };
 
@@ -560,6 +640,7 @@
   ------------------------------------------------------------------ */
   const ConsultModal = {
     injected: false,
+    close() { /* replaced once the modal is injected */ },
     inject() {
       if (this.injected || !document.querySelector("[data-consult]")) return;
       const tpl = document.createElement("div");
@@ -625,6 +706,7 @@
         tpl.classList.remove("is-open");
         document.body.classList.remove("modal-open");
       };
+      this.close = close;
       document.querySelectorAll("[data-consult]").forEach(el =>
         el.addEventListener("click", e => { e.preventDefault(); open(); })
       );
