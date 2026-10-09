@@ -49,7 +49,7 @@
         "description": "Full-service marketing agency in Cairo, Egypt. Brand strategy, creative, web and digital experience, and performance marketing, connected into one system built around measurable business growth across Egypt and MENA.",
         "foundingLocation": "Cairo, Egypt",
         "areaServed": ["Egypt", "MENA"],
-        "knowsAbout": ["Performance Marketing", "E-commerce Growth", "SEO", "Social Media Marketing", "Lead Generation", "Marketing Analytics", "Digital Transformation"],
+        "knowsAbout": ["Performance Marketing", "Event Management", "Brand Activations", "E-commerce Growth", "SEO", "Social Media Marketing", "Lead Generation", "Marketing Analytics", "Digital Transformation"],
         "address": {
           "@type": "PostalAddress", "addressLocality": "New Cairo", "addressRegion": "Cairo", "addressCountry": "EG"
         },
@@ -89,22 +89,36 @@
 <body class="noise">
   <a class="skip-link" href="#main" data-en="Skip to content" data-ar="تخطّي إلى المحتوى">Skip to content</a>
 
-  <!-- Loader: Brand Vitals logo + animated ECG pulse -->
+  <!-- Loader: a full-screen vital-signs monitor. The pulse sweeps across,
+       flatlines into a bright line, and that line splits the screen open. -->
   <div class="loader" aria-hidden="true">
+    <div class="loader__lid loader__lid--top"></div>
+    <div class="loader__lid loader__lid--bottom"></div>
+    <svg class="loader__ecg loader__ecg--wide" viewBox="0 0 1200 240" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="loaderGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" style="stop-color:var(--accent)"/>
+          <stop offset="1" style="stop-color:var(--accent-2)"/>
+        </linearGradient>
+      </defs>
+      <path class="loader__ecg-track" pathLength="1000" d="M0 140 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h30 l10 14 l16 -120 l16 196 l12 -90 h20 q18 -30 36 0 H1200"/>
+      <path class="loader__ecg-line" pathLength="1000" d="M0 140 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h30 l10 14 l16 -120 l16 196 l12 -90 h20 q18 -30 36 0 H1200"/>
+      <path class="loader__ecg-head" pathLength="1000" d="M0 140 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h30 l10 14 l16 -120 l16 196 l12 -90 h20 q18 -30 36 0 H1200"/>
+    </svg>
+    <svg class="loader__ecg loader__ecg--narrow" viewBox="0 0 600 240" preserveAspectRatio="none">
+      <path class="loader__ecg-track" pathLength="1000" d="M0 140 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h30 l10 14 l16 -120 l16 196 l12 -90 h20 q18 -30 36 0 H600"/>
+      <path class="loader__ecg-line" pathLength="1000" d="M0 140 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h30 l10 14 l16 -120 l16 196 l12 -90 h20 q18 -30 36 0 H600"/>
+      <path class="loader__ecg-head" pathLength="1000" d="M0 140 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h40 q10 -14 20 0 h14 l8 10 l12 -78 l12 100 l9 -32 h18 q16 -26 32 0 h45 h30 l10 14 l16 -120 l16 196 l12 -90 h20 q18 -30 36 0 H600"/>
+    </svg>
     <div class="loader__brand">
-      <img class="loader__logo" src="assets/img/logo-light.svg" alt="Brand Vitals" width="240" height="54">
-      <svg class="loader__pulse" viewBox="0 0 240 30" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="loaderGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" style="stop-color:var(--accent)"/>
-            <stop offset="1" style="stop-color:var(--accent-2)"/>
-          </linearGradient>
-        </defs>
-        <path class="loader__pulse-track" d="M0 15 H146 l9 -11 l7 22 l8 -18 l6 7 H240"/>
-        <path class="loader__pulse-line" d="M0 15 H146 l9 -11 l7 22 l8 -18 l6 7 H240"/>
-      </svg>
-      <div class="loader__pct"><span>0</span><i>%</i></div>
+      <img class="loader__logo" src="assets/img/logo-light.svg" alt="Brand Vitals" width="440" height="77">
     </div>
+    <p class="loader__tag"><span data-en="Checking your brand's vitals" data-ar="بنفحص مؤشرات علامتك">Checking your brand's vitals</span></p>
+    <div class="loader__hud loader__hud--tl"><span class="loader__live"><i></i>Vital signs monitor</span></div>
+    <div class="loader__hud loader__hud--tr">Brand Vitals · Cairo</div>
+    <div class="loader__hud loader__hud--bl"><span class="loader__num loader__bpm"><b>72</b>BPM</span></div>
+    <div class="loader__hud loader__hud--br"><span class="loader__num loader__pct"><b>0</b>%</span></div>
+    <div class="loader__flat"></div>
   </div>
 
   <div class="progress" aria-hidden="true"></div>
@@ -475,11 +489,129 @@
       </div>
     </section>
 
+    <!-- ============ EVENTS & ACTIVATIONS ============ -->
+    <section class="section events grid-field" id="events">
+      <div class="container">
+        <div class="events__grid">
+          <div class="events__copy" data-reveal>
+            <p class="eyebrow" data-en="08 · Events &amp; activations" data-ar="08 · الفعاليات والتفعيلات">08 · Events &amp; activations</p>
+            <h2 data-en="Moments people talk about. Results you can measure." data-ar="لحظاتٌ يتحدث عنها الناس، ونتائج تُقاس.">Moments people talk about. Results you can measure.</h2>
+            <p class="lead" data-en="From launch nights to mall activations, we design and run brand experiences that pull people in. Then we connect every one of them to your marketing, so the buzz turns into followers, leads, and sales." data-ar="من ليالي الإطلاق إلى التفعيلات في المولات، نصمّم وننفّذ تجارب للعلامة تجذب الناس إليها. ثم نربط كل تجربة بتسويقك، لتتحوّل الضجة إلى متابعين وعملاء ومبيعات.">From launch nights to mall activations, we design and run brand experiences that pull people in. Then we connect every one of them to your marketing, so the buzz turns into followers, leads, and sales.</p>
+            <div class="events__types">
+              <div class="ev-type"><span class="ev-type__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span><h3 data-en="Brand activations" data-ar="تفعيلات العلامة">Brand activations</h3></div>
+              <div class="ev-type"><span class="ev-type__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4c3 0 6 3 6 6l-6 6-6-6 6-6z"/><circle cx="15" cy="9" r="1.5"/><path d="M8 10l-3 1-2 3 4-.5M14 16l-1 3-3 2 .5-4M5 19c1-3 3-5 3-5"/></svg></span><h3 data-en="Product launches" data-ar="إطلاق المنتجات">Product launches</h3></div>
+              <div class="ev-type"><span class="ev-type__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8"/></svg></span><h3 data-en="Corporate events &amp; conferences" data-ar="فعاليات الشركات والمؤتمرات">Corporate events &amp; conferences</h3></div>
+              <div class="ev-type"><span class="ev-type__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l2-5h14l2 5"/><path d="M3 9h18v1a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v8h14v-8"/></svg></span><h3 data-en="Exhibitions &amp; booths" data-ar="المعارض والأجنحة">Exhibitions &amp; booths</h3></div>
+              <div class="ev-type"><span class="ev-type__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l1 14H5z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span><h3 data-en="Pop-ups &amp; retail activations" data-ar="المتاجر المؤقتة وتفعيلات البيع">Pop-ups &amp; retail activations</h3></div>
+              <div class="ev-type"><span class="ev-type__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13.5" r="3.5"/></svg></span><h3 data-en="Influencer &amp; media days" data-ar="أيام المؤثرين والإعلام">Influencer &amp; media days</h3></div>
+            </div>
+            <div class="events__flow">
+              <span><b>01</b><span data-en="Concept" data-ar="الفكرة">Concept</span></span>
+              <span><b>02</b><span data-en="Production" data-ar="الإنتاج">Production</span></span>
+              <span><b>03</b><span data-en="Live day" data-ar="يوم الحدث">Live day</span></span>
+              <span><b>04</b><span data-en="Content &amp; results" data-ar="المحتوى والنتائج">Content &amp; results</span></span>
+            </div>
+            <a class="events__wa" href="https://wa.me/201090861397" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.8 7.2L3 20l1.4-4.9A8.4 8.4 0 1 1 21 11.5z"/></svg>
+              <span data-en="Prefer to talk it through? Message us on WhatsApp" data-ar="تفضّل الحديث مباشرة؟ راسلنا على واتساب">Prefer to talk it through? Message us on WhatsApp</span>
+            </a>
+          </div>
+
+          <div class="card events__card" data-reveal style="--rd:.1s">
+            <h3 data-en="Plan your event with us" data-ar="خطّط لفعاليتك معنا">Plan your event with us</h3>
+            <p class="events__sub" data-en="Share the basics. Our events team calls you back within one business day to shape the idea with you." data-ar="شاركنا الأساسيات، وسيتصل بك فريق الفعاليات خلال يوم عمل واحد لنبلور الفكرة معًا.">Share the basics. Our events team calls you back within one business day to shape the idea with you.</p>
+            <form data-validate data-success="#eventsSuccess" data-form="events" novalidate>
+              <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="ev-name" data-en="Full name *" data-ar="الاسم الكامل *">Full name *</label>
+                  <input id="ev-name" name="name" type="text" required autocomplete="name" data-en-ph="Your name" data-ar-ph="اسمك" placeholder="Your name">
+                  <span class="err" data-en="Please enter your name." data-ar="يرجى إدخال اسمك.">Please enter your name.</span>
+                </div>
+                <div class="field">
+                  <label for="ev-phone" data-en="Phone / WhatsApp *" data-ar="الهاتف / واتساب *">Phone / WhatsApp *</label>
+                  <input id="ev-phone" name="phone" type="tel" required autocomplete="tel" dir="ltr" placeholder="+20 …">
+                  <span class="err" data-en="Please enter your number." data-ar="يرجى إدخال رقمك.">Please enter your number.</span>
+                </div>
+                <div class="field">
+                  <label for="ev-company" data-en="Company" data-ar="الشركة">Company</label>
+                  <input id="ev-company" name="company" type="text" autocomplete="organization" data-en-ph="Company or brand" data-ar-ph="الشركة أو العلامة" placeholder="Company or brand">
+                </div>
+                <div class="field">
+                  <label for="ev-email" data-en="Email" data-ar="البريد الإلكتروني">Email</label>
+                  <input id="ev-email" name="email" type="email" autocomplete="email" placeholder="you@company.com">
+                </div>
+                <div class="field">
+                  <label for="ev-type" data-en="Event type *" data-ar="نوع الفعالية *">Event type *</label>
+                  <select id="ev-type" name="interest" required>
+                    <option value="" data-en="Choose a type" data-ar="اختر النوع">Choose a type</option>
+                    <option value="activation" data-en="Brand activation" data-ar="تفعيل للعلامة">Brand activation</option>
+                    <option value="launch" data-en="Product launch" data-ar="إطلاق منتج">Product launch</option>
+                    <option value="corporate" data-en="Corporate event or conference" data-ar="فعالية شركة أو مؤتمر">Corporate event or conference</option>
+                    <option value="exhibition" data-en="Exhibition booth" data-ar="جناح في معرض">Exhibition booth</option>
+                    <option value="popup" data-en="Pop-up or retail activation" data-ar="متجر مؤقت أو تفعيل بيع">Pop-up or retail activation</option>
+                    <option value="influencer" data-en="Influencer or media day" data-ar="يوم مؤثرين أو إعلام">Influencer or media day</option>
+                    <option value="unsure" data-en="Not sure yet" data-ar="لست متأكدًا بعد">Not sure yet</option>
+                  </select>
+                  <span class="err" data-en="Please choose a type." data-ar="يرجى اختيار النوع.">Please choose a type.</span>
+                </div>
+                <div class="field">
+                  <label for="ev-guests" data-en="Expected guests" data-ar="عدد الحضور المتوقع">Expected guests</label>
+                  <select id="ev-guests" name="guests">
+                    <option value="" data-en="Select a range" data-ar="اختر النطاق">Select a range</option>
+                    <option value="under-100" data-en="Under 100" data-ar="أقل من 100">Under 100</option>
+                    <option value="100-300" data-en="100 to 300" data-ar="100 إلى 300">100 to 300</option>
+                    <option value="300-1000" data-en="300 to 1,000" data-ar="300 إلى 1,000">300 to 1,000</option>
+                    <option value="1000-plus" data-en="1,000+" data-ar="أكثر من 1,000">1,000+</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="ev-date" data-en="Expected date" data-ar="الموعد المتوقع">Expected date</label>
+                  <input id="ev-date" name="event_date" type="text" data-en-ph="e.g. mid-March" data-ar-ph="مثلًا: منتصف مارس" placeholder="e.g. mid-March">
+                </div>
+                <div class="field">
+                  <label for="ev-city" data-en="City" data-ar="المدينة">City</label>
+                  <input id="ev-city" name="city" type="text" data-en-ph="e.g. Cairo" data-ar-ph="مثلًا: القاهرة" placeholder="e.g. Cairo">
+                </div>
+                <div class="field field--full">
+                  <label for="ev-budget" data-en="Budget (optional)" data-ar="الميزانية (اختياري)">Budget (optional)</label>
+                  <select id="ev-budget" name="budget">
+                    <option value="" data-en="Select budget range" data-ar="اختر نطاق الميزانية">Select budget range</option>
+                    <option value="under-100k" data-en="Under 100,000 EGP" data-ar="أقل من 100,000 جنيه">Under 100,000 EGP</option>
+                    <option value="100k-300k" data-en="100,000 to 300,000 EGP" data-ar="100,000 إلى 300,000 جنيه">100,000 to 300,000 EGP</option>
+                    <option value="300k-750k" data-en="300,000 to 750,000 EGP" data-ar="300,000 إلى 750,000 جنيه">300,000 to 750,000 EGP</option>
+                    <option value="750k-plus" data-en="750,000+ EGP" data-ar="أكثر من 750,000 جنيه">750,000+ EGP</option>
+                    <option value="unsure" data-en="Not sure yet" data-ar="لست متأكدًا بعد">Not sure yet</option>
+                  </select>
+                </div>
+                <div class="field field--full">
+                  <label for="ev-msg" data-en="The idea, in a few lines" data-ar="الفكرة في سطور">The idea, in a few lines</label>
+                  <textarea id="ev-msg" name="message" rows="3" data-en-ph="What's the occasion, and what should guests walk away feeling?" data-ar-ph="ما المناسبة، وما الذي تريد أن يشعر به الحضور بعدها؟" placeholder="What's the occasion, and what should guests walk away feeling?"></textarea>
+                </div>
+                <div class="field--full">
+                  <button class="btn btn--primary btn--lg" type="submit" style="width:100%">
+                    <span class="spinner" aria-hidden="true"></span>
+                    <span class="btn__label" data-en="Let's plan it together" data-ar="لنخطّط لها معًا">Let's plan it together</span>
+                  </button>
+                  <p class="mono events__note" data-en="We call you within one business day · No obligation" data-ar="نتصل بك خلال يوم عمل واحد · دون التزام">We call you within one business day · No obligation</p>
+                </div>
+              </div>
+            </form>
+            <div class="form-success" id="eventsSuccess" role="status">
+              <span class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+              <h3 data-en="Your event is on our radar." data-ar="فعاليتك على رادارنا.">Your event is on our radar.</h3>
+              <p style="color:var(--text-2); max-width:40ch" data-en="Our events team will call you within one business day to talk through the idea, the date, and what success looks like." data-ar="سيتصل بك فريق الفعاليات خلال يوم عمل واحد لنتحدث عن الفكرة والموعد وشكل النجاح الذي تريده.">Our events team will call you within one business day to talk through the idea, the date, and what success looks like.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ FAQ ============ -->
     <section class="section section--tight">
       <div class="container" style="max-width:880px">
         <div class="section-head" data-reveal>
-          <p class="eyebrow" data-en="08 · FAQ" data-ar="08 · الأسئلة الشائعة">08 · FAQ</p>
+          <p class="eyebrow" data-en="09 · FAQ" data-ar="09 · الأسئلة الشائعة">09 · FAQ</p>
           <h2 data-en="Questions, answered." data-ar="أسئلة، بإجابات.">Questions, answered.</h2>
         </div>
         <div class="acc" data-reveal>
@@ -519,7 +651,7 @@
     <section class="section cta-band section--flush-top">
       <div class="container">
         <div class="cta-band__card grid-field" data-reveal>
-          <p class="eyebrow eyebrow--bare" style="color:var(--accent)" data-en="09 · Start a conversation" data-ar="09 · ابدأ محادثة">09 · Start a conversation</p>
+          <p class="eyebrow eyebrow--bare" style="color:var(--accent)" data-en="10 · Start a conversation" data-ar="10 · ابدأ محادثة">10 · Start a conversation</p>
           <h2 data-en="Have a growth problem worth solving?" data-ar="عندك تحدّي نموٍّ يستحقّ الحل؟">Have a growth problem worth solving?</h2>
           <p class="lead" data-en="Tell us where you are, where you want to go, and what's getting in the way. We'll come back with a tailored growth plan within 24 hours." data-ar="أخبرنا أين أنت الآن، وإلى أين تريد الوصول، وما الذي يعيقك. سنعود إليك بخطة نموّ مخصّصة خلال 24 ساعة.">Tell us where you are, where you want to go, and what's getting in the way. We'll come back with a tailored growth plan within 24 hours.</p>
           <div class="btn-row" style="justify-content:center">
@@ -565,6 +697,7 @@
             <li><a href="solutions.html" data-en="Marketing &amp; Growth" data-ar="التسويق والنموّ">Marketing &amp; Growth</a></li>
             <li><a href="solutions.html" data-en="SEO &amp; Google Ads" data-ar="السيو وإعلانات جوجل">SEO &amp; Google Ads</a></li>
             <li><a href="solutions.html" data-en="Social Media Marketing" data-ar="تسويق وسائل التواصل">Social Media Marketing</a></li>
+            <li><a href="index.html#events" data-en="Events &amp; Activations" data-ar="الفعاليات والتفعيلات">Events &amp; Activations</a></li>
           </ul>
         </div>
         <div class="footer__col">

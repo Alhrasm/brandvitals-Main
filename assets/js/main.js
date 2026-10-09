@@ -74,15 +74,40 @@
         document.body.classList.add("is-loaded");
         if (loader) loader.classList.add("is-done");
       };
-      if (!loader || reduceMotion) { done(); return; }
-      const pct = loader.querySelector(".loader__pct span");
-      let n = 0;
-      const tick = setInterval(() => {
-        n = Math.min(100, n + Math.ceil(Math.random() * 22));
-        if (pct) pct.textContent = n;
-        if (n >= 100) { clearInterval(tick); setTimeout(done, 350); }
-      }, 110);
-      setTimeout(done, 2600); // hard cap
+      if (!loader || reduceMotion) { done(); if (loader) loader.style.display = "none"; return; }
+      // Full sequence on the first visit of a session, a short one afterwards.
+      let quick = false;
+      try { quick = sessionStorage.getItem("bv-intro") === "1"; sessionStorage.setItem("bv-intro", "1"); } catch (e) { /* ignore */ }
+      if (quick) loader.classList.add("loader--quick");
+      const dur = (quick ? 700 : 1600) + 150;
+      const pct = loader.querySelector(".loader__pct b");
+      const bpm = loader.querySelector(".loader__bpm b");
+      let loaded = document.readyState === "complete";
+      let finished = false;
+      window.addEventListener("load", () => { loaded = true; }, { once: true });
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        if (pct) pct.textContent = "100";
+        // Pulse flatlines into one bright line, then the screen splits open along it.
+        loader.classList.add("is-flat");
+        setTimeout(() => {
+          done();
+          setTimeout(() => { loader.style.display = "none"; }, 1200);
+        }, quick ? 240 : 420);
+      };
+      const t0 = performance.now();
+      const tick = now => {
+        if (finished) return;
+        const p = Math.min(1, (now - t0) / dur);
+        const e = 1 - Math.pow(1 - p, 3);
+        if (pct) pct.textContent = Math.round(e * (loaded ? 100 : 94));
+        if (bpm) bpm.textContent = Math.round(72 + e * 56);
+        if (p >= 1 && loaded) { finish(); return; }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      setTimeout(finish, quick ? 1600 : 3400); // hard cap so slow assets never trap the visitor
     }
   };
 
@@ -395,10 +420,21 @@
     collect(form) {
       const fd = new FormData(form);
       const get = k => String(fd.get(k) || "").trim();
+      // Any extra fields (event date, city, guests…) travel inside the message as "Label: value" lines.
+      const known = ["name", "email", "phone", "company", "interest", "budget", "message", "website"];
+      const extra = [];
+      form.querySelectorAll("input[name], select[name], textarea[name]").forEach(el => {
+        if (known.includes(el.name) || !String(el.value).trim()) return;
+        const lab = el.id && form.querySelector('label[for="' + el.id + '"]');
+        const label = ((lab && (lab.getAttribute("data-en") || lab.textContent)) || el.name).replace(/\s*\*\s*$/, "").trim();
+        extra.push(label + ": " + (el.tagName === "SELECT" ? Forms.label(form, el.name) : String(el.value).trim()));
+      });
+      const msg = get("message");
       return {
         name: get("name"), email: get("email"), phone: get("phone"), company: get("company"),
-        service: Forms.label(form, "interest"), budget: Forms.label(form, "budget"), message: get("message"),
-        website: get("website"), form: form.closest("#consultModal") ? "consult" : "contact"
+        service: Forms.label(form, "interest"), budget: Forms.label(form, "budget"),
+        message: extra.length ? extra.join("\n") + (msg ? "\n\n" + msg : "") : msg,
+        website: get("website"), form: form.dataset.form || (form.closest("#consultModal") ? "consult" : "contact")
       };
     },
     waNumber() {
@@ -409,12 +445,12 @@
     toWhatsApp(d) {
       const ar = I18n.lang === "ar";
       const rows = [
-        ar ? "طلب جديد من الموقع" : "New inquiry from the website",
+        d.form === "events" ? (ar ? "طلب فعالية جديد من الموقع" : "New event inquiry from the website") : (ar ? "طلب جديد من الموقع" : "New inquiry from the website"),
         (ar ? "الاسم: " : "Name: ") + d.name,
         d.company && (ar ? "الشركة: " : "Company: ") + d.company,
         d.email && (ar ? "البريد: " : "Email: ") + d.email,
         d.phone && (ar ? "الهاتف: " : "Phone: ") + d.phone,
-        d.service && (ar ? "الخدمة: " : "Service: ") + d.service,
+        d.service && (d.form === "events" ? (ar ? "نوع الفعالية: " : "Event type: ") : (ar ? "الخدمة: " : "Service: ")) + d.service,
         d.budget && (ar ? "الميزانية: " : "Budget: ") + d.budget,
         d.message && (ar ? "الرسالة: " : "Message: ") + d.message
       ].filter(Boolean);

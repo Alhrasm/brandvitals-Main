@@ -46,11 +46,11 @@
 
   const DEFAULT_PALETTE = {
     "--d-bg": "#05080B", "--d-bg-2": "#081016", "--d-surface": "#0B1319", "--d-surface-2": "#101B23",
-    "--d-text": "#ECF3F6", "--d-text-2": "#9DADB8", "--d-text-3": "#62727E", "--d-line": "#D6ECF5",
+    "--d-text": "#ECF3F6", "--d-text-2": "#9DADB8", "--d-text-3": "#748490", "--d-line": "#D6ECF5",
     "--d-accent": "#00CFFF", "--d-accent-2": "#00E0C6", "--d-accent-ink": "#02141B",
     "--l-bg": "#F5F7F9", "--l-bg-2": "#ECF0F3", "--l-surface": "#FFFFFF", "--l-surface-2": "#F2F5F7",
-    "--l-text": "#07131B", "--l-text-2": "#475864", "--l-text-3": "#7A8993", "--l-line": "#081822",
-    "--l-accent": "#0098C9", "--l-accent-2": "#00A892", "--l-accent-ink": "#FFFFFF",
+    "--l-text": "#07131B", "--l-text-2": "#475864", "--l-text-3": "#5E6D77", "--l-line": "#081822",
+    "--l-accent": "#007299", "--l-accent-2": "#007A6A", "--l-accent-ink": "#FFFFFF",
     "--danger": "#FF7A85"
   };
   const PALETTE_KEYS = [
@@ -67,7 +67,7 @@
     ["accent-ink", "لون النص فوق الأزرار", "Text on accent"]
   ];
   const PRESETS = [
-    { id: "brand", ar: "Brand Vitals الأصلي", en: "Brand Vitals original", d: ["#00CFFF", "#00E0C6", "#02141B"], l: ["#0098C9", "#00A892", "#FFFFFF"] },
+    { id: "brand", ar: "Brand Vitals الأصلي", en: "Brand Vitals original", d: ["#00CFFF", "#00E0C6", "#02141B"], l: ["#007299", "#007A6A", "#FFFFFF"] },
     { id: "emerald", ar: "زمردي", en: "Emerald", d: ["#2EE6A6", "#9BF26B", "#03170F"], l: ["#08956A", "#3C9A1E", "#FFFFFF"] },
     { id: "violet", ar: "بنفسجي", en: "Violet", d: ["#9D8CFF", "#5CC8FF", "#0C0726"], l: ["#5B4BE0", "#1B7FD1", "#FFFFFF"] },
     { id: "amber", ar: "كهرماني", en: "Amber", d: ["#FFB547", "#FF7A59", "#1F1200"], l: ["#B86A00", "#C8441B", "#FFFFFF"] },
@@ -419,7 +419,7 @@
     tabOverview: ["نظرة عامة", "Overview"],
     tabLeads: ["العملاء", "Leads"],
     overviewIntro: ["زوار الموقع والعملاء المحتملين في مكان واحد.", "Website visitors and leads in one place."],
-    leadsIntro: ["كل الطلبات اللي جت من فورم التواصل ونافذة الاستشارة.", "Every request from the contact form and the consultation popup."],
+    leadsIntro: ["كل الطلبات اللي جت من فورم التواصل ونافذة الاستشارة وفورم الفعاليات.", "Every request from the contact form, the consultation popup and the events form."],
     lastDays: ["آخر {n} يوم", "Last {n} days"],
     refreshData: ["تحديث", "Refresh"],
     liveNow: ["{n} على الموقع دلوقتي", "{n} on the site now"],
@@ -523,6 +523,7 @@
     lMessage: ["الرسالة", "Message"],
     formContact: ["فورم التواصل", "Contact form"],
     formConsult: ["نافذة الاستشارة", "Consultation popup"],
+    formEvents: ["فورم الفعاليات", "Events form"],
     deleteLead: ["حذف", "Delete"],
     deleteLeadQ: ["متأكد إنك عايز تحذف «{n}» نهائيًا؟", "Permanently delete “{n}”?"],
     leadDeleted: ["اتحذف العميل", "Lead deleted"],
@@ -2932,12 +2933,13 @@ grant execute on function public.bv_stats(int, text) to authenticated;
       ["Omar Khaled", "Tamr Foods", "Multiple services", "100,000+ EGP", "contacted", 2.4, "", "Launching a new product line, need branding, a website and paid media."],
       ["Nour El Din", "", "SEO", "Under 10,000 EGP", "qualified", 4.2, "linkedin.com", "Our e-commerce site gets little organic traffic. Can you audit it?"],
       ["Sara Mostafa", "Vista Real Estate", "Branding & design", "50,000 to 100,000 EGP", "won", 9.5, "google.com", "Rebrand for a real estate developer ahead of a new compound launch."],
-      ["Youssef Tarek", "Pulse Gym", "Content production", "", "lost", 15, "facebook.com", "Need monthly reels and photography for three branches."]
+      ["Youssef Tarek", "Pulse Gym", "Content production", "", "lost", 15, "facebook.com", "Need monthly reels and photography for three branches."],
+      ["Laila Samir", "Aura Cosmetics", "Product launch", "300,000 to 750,000 EGP", "new", 0.3, "instagram.com", "Expected guests: 300 to 1,000\nExpected date: mid-March\nCity: Cairo\n\nLaunch night for a new skincare line with influencers and press."]
     ];
     return rows.map((r, i) => ({
       id: "demo-" + i, created_at: new Date(Date.now() - r[5] * 864e5).toISOString(), name: r[0] + tag, company: r[1], service: r[2], budget: r[3], status: r[4],
       email: "sample" + (i + 1) + "@example.com", phone: "+20 100 000 00" + String(i + 1).padStart(2, "0"), message: r[7], referrer: r[6],
-      form: i % 3 === 1 ? "consult" : "contact", page: i % 3 === 1 ? "index.html" : "contact.html", lang: i % 2 ? "ar" : "en", notes: i === 2 ? (ar ? "كلمته، مستني يبعت الـ brief." : "Called, waiting for the brief.") : ""
+      form: i === 6 ? "events" : i % 3 === 1 ? "consult" : "contact", page: i % 3 === 1 || i === 6 ? "index.html" : "contact.html", lang: i % 2 ? "ar" : "en", notes: i === 2 ? (ar ? "كلمته، مستني يبعت الـ brief." : "Called, waiting for the brief.") : ""
     }));
   }
 
@@ -3239,7 +3241,7 @@ grant execute on function public.bv_stats(int, text) to authenticated;
     det.append(h("div", { class: "lead__body" },
       h("div", { class: "kvs" },
         item(t("lEmail"), l.email, true), item(t("lPhone"), l.phone, true), item(t("lCompany"), l.company), item(t("lService"), l.service),
-        item(t("lBudget"), l.budget), item(t("lSource"), src), item(t("lPage"), pageName(l.page || "") + " · " + t(l.form === "consult" ? "formConsult" : "formContact")),
+        item(t("lBudget"), l.budget), item(t("lSource"), src), item(t("lPage"), pageName(l.page || "") + " · " + t({ consult: "formConsult", events: "formEvents" }[l.form] || "formContact")),
         item(t("lLang"), langName(l.lang)), item(t("lDate"), fmtDate(l.created_at))),
       l.message ? h("div", { class: "lead__msg" }, h("span", { class: "kv__k" }, t("lMessage")), h("p", { dir: "auto" }, l.message)) : null,
       h("div", { class: "lead__edit" },
