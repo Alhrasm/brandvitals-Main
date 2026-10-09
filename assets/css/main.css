@@ -482,7 +482,8 @@ p { text-wrap: pretty; }
   color: var(--text-2); opacity: 0; animation: loaderFade 0.6s var(--ease-out) 0.45s forwards; transition: opacity 0.25s;
 }
 [dir="rtl"] .loader__tag { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: 0.95rem; }
-.loader__tag::after { content: "..."; display: inline-block; width: 0; overflow: hidden; vertical-align: bottom; animation: loaderDots 1.2s steps(4) infinite; }
+.loader__tag::after { content: "..."; display: inline-block; width: 1.4em; text-align: start; clip-path: inset(0 100% 0 0); animation: loaderDots 1.2s steps(4) infinite; }
+[dir="rtl"] .loader__tag::after { clip-path: inset(0 0 0 100%); animation-name: loaderDotsRtl; }
 
 .loader__hud {
   position: absolute; z-index: 3; padding: clamp(1.1rem, 3vw, 2.2rem); direction: ltr;
@@ -515,7 +516,8 @@ p { text-wrap: pretty; }
 @keyframes loaderIn { to { opacity: 1; transform: none; filter: none; } }
 @keyframes loaderFade { to { opacity: 1; } }
 @keyframes loaderOut { from { opacity: 1; } to { opacity: 0; } }
-@keyframes loaderDots { to { width: 1.4em; } }
+@keyframes loaderDots { to { clip-path: inset(0 0 0 0); } }
+@keyframes loaderDotsRtl { to { clip-path: inset(0 0 0 0); } }
 @keyframes loaderBlink { 50% { opacity: 0.3; } }
 @media (max-width: 700px) {
   .loader__ecg--wide { display: none; }
